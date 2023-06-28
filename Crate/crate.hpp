@@ -12,6 +12,12 @@
 namespace crate
 {
 
+
+	inline constexpr uint32_t CRATE_MAX_COUNT = 5000;
+	inline std::deque<uint32_t> unusedIndexes;
+	inline uint32_t nextID = 0;
+
+
 	void runTimeLogErr(const std::string_view message,
 		const std::source_location location = std::source_location::current())
 	{
@@ -33,10 +39,6 @@ namespace crate
 	public:
 		bool mDisabled = false;
 	};
-
-	inline constexpr uint32_t CRATE_MAX_COUNT = 5000;
-	inline std::deque<uint32_t> unusedIndexes;
-	inline uint32_t nextID = 0;
 
 
 
@@ -74,17 +76,17 @@ namespace crate
 			runTimeLogErr("Trying to unbind an unused crateID", location);
 		unusedIndexes.push_back(*crateID);
 		crateSystem.erase(*crateID);
-
+		*crateID = std::numeric_limits<uint32_t>().max();
 	}
 
-	uint32_t getAttachmentID()
+	inline uint32_t getAttachmentID()
 	{
 		static uint32_t attachmentID = 0;
 		return attachmentID++;
 	}
 
 	template <class Attachment>
-	uint32_t getAttachmentID()
+	inline uint32_t getAttachmentID()
 	{
 		static uint32_t attachmentID = getAttachmentID();
 		return attachmentID;
@@ -126,6 +128,8 @@ namespace crate
 	template <class Attachment>
 	inline [[nodiscard]] Attachment* getAttachment(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
+		if (!crateExists(crateID))
+			runTimeLogErr("Trying to get an attachment from an unbound crate", location);
 		uint32_t attachmentID = getAttachmentID<Attachment>();
 		if (!hasAttachment<Attachment>(crateID))
 			runTimeLogErr("Crate doesn't have the requested attachment", location);
@@ -181,5 +185,18 @@ namespace crate
 
 		uint32_t attachmentID = getAttachmentID<Attachment>();
 		crateSystem[*crateID][attachmentID]->mDisabled = false;
+	}
+
+	inline void clearEverything()
+	{
+		for (auto crate : crateSystem)
+		{
+			uint32_t crateID = crate.first;
+			for (auto [attachmentID, attachment] : crateSystem[crateID])
+			{
+				delete attachment;
+			}
+		}
+		crateSystem.clear();
 	}
 }
