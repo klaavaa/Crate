@@ -10,6 +10,7 @@ Example:
 ```c++
 
 // #define CRATE_DISABLE_LOGGING if you want to disable error messages
+// #define CRATE_MAX_COUNT to change maximum crate count (default is 5000)
 #include "crate.hpp"
 
 struct PositionAttachment : public crate::IAttachment
