@@ -1,5 +1,4 @@
-#pragma once
-
+module;
 
 #include <iostream>
 
@@ -13,52 +12,51 @@
 #include <initializer_list>
 
 
-
+export module crate;
 
 namespace crate
 {
-
-#ifndef CRATE_MAX_COUNT
-#define CRATE_MAX_COUNT 5000u
-#endif
-	inline std::deque<uint32_t> unusedIndexes;
-	inline uint32_t nextID = 0;
+	export bool CRATE_DISABLE_LOGGING = false;
+	export inline uint32_t CRATE_MAX_COUNT = 5000;
+	export inline std::deque<uint32_t> unusedIndexes;
+	export inline uint32_t nextID = 0;
 
 
 	void runTimeLogErr(const std::string_view message,
 		const std::source_location location = std::source_location::current())
-	{
-#ifndef CRATE_DISABLE_LOGGING
-		std::cerr << "file: "
-			<< location.file_name() << '('
-			<< location.line() << ':'
-			<< location.column() << ") `"
-			<< location.function_name() << "`: "
-			<< message << '\n';
-#endif
+	{	
+		if(!CRATE_DISABLE_LOGGING)
+		{
+			std::cerr << "file: "
+				<< location.file_name() << '('
+				<< location.line() << ':'
+				<< location.column() << ") `"
+				<< location.function_name() << "`: "
+				<< message << '\n';
+		}
 		throw std::runtime_error(message.data());
 	}
 
 
-	struct IAttachment
+	export struct IAttachment
 	{
-	
+
 	public:
 		bool mDisabled = false;
 	};
 
+	export inline std::unordered_map<uint32_t, std::unordered_map<uint32_t, IAttachment*>> crateSystem;
 
 
-	inline std::unordered_map<uint32_t, std::unordered_map<uint32_t, IAttachment*>> crateSystem;
 
 
-	inline [[nodiscard]] bool crateExists(uint32_t* crateID)
+	export inline [[nodiscard]] bool crateExists(uint32_t* crateID)
 	{
 
 		return crateSystem.find(*crateID) != crateSystem.end();
 	}
 
-	inline void bind(uint32_t* crateID, std::source_location location = std::source_location::current())
+	export inline void bind(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (nextID > CRATE_MAX_COUNT)
 			runTimeLogErr("Too many crateID:s bound", location);
@@ -66,8 +64,8 @@ namespace crate
 		{
 			*crateID = unusedIndexes.front();
 			unusedIndexes.pop_front();
-	
-			crateSystem.insert({*crateID, std::unordered_map<uint32_t, IAttachment*>()});
+
+			crateSystem.insert({ *crateID, std::unordered_map<uint32_t, IAttachment*>() });
 			return;
 		}
 
@@ -77,7 +75,7 @@ namespace crate
 		nextID++;
 	}
 
-	inline void unbind(uint32_t* crateID, std::source_location location = std::source_location::current())
+	export inline void unbind(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (!crateExists(crateID))
 			runTimeLogErr("Trying to unbind an unused crateID", location);
@@ -99,14 +97,14 @@ namespace crate
 		return attachmentID;
 	}
 
-	template <class Attachment>
+	export template <class Attachment>
 	inline [[nodiscard]] bool hasAttachment(uint32_t* crateID)
 	{
 		uint32_t attachmentID = getAttachmentID<Attachment>();
 		return crateSystem[*crateID].find(attachmentID) != crateSystem[*crateID].end();
 	}
 
-	template <class Attachment, typename... Args>
+	export template <class Attachment, typename... Args>
 	inline void bindAttachment(uint32_t* crateID, Args... args)
 	{
 
@@ -115,12 +113,12 @@ namespace crate
 		uint32_t attachmentID = getAttachmentID<Attachment>();
 		if (hasAttachment<Attachment>(crateID))
 			runTimeLogErr("Attachment already bound on crate", std::source_location::current());
-		
-		Attachment* attachment = new Attachment(args... );
+
+		Attachment* attachment = new Attachment(args...);
 		crateSystem[*crateID][attachmentID] = attachment;
 	}
 
-	template <class Attachment>
+	export template <class Attachment>
 	inline void unbindAttachment(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (!crateExists(crateID))
@@ -133,7 +131,7 @@ namespace crate
 		crateSystem[*crateID].erase(attachmentID);
 	}
 
-	template <class Attachment>
+	export template <class Attachment>
 	inline [[nodiscard]] Attachment* getAttachment(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (!crateExists(crateID))
@@ -145,7 +143,7 @@ namespace crate
 		return (Attachment*)crateSystem[*crateID][attachmentID];
 	}
 
-	template <class Attachment>
+	export template <class Attachment>
 	inline [[nodiscard]] std::vector<Attachment*> getAllAttachments()
 	{
 		std::vector<Attachment*> attachments;
@@ -161,28 +159,28 @@ namespace crate
 		}
 		return attachments;
 	}
-	
-	template <class Attachment, typename Function, typename ...Args>
+
+	export template <class Attachment, typename Function, typename ...Args>
 	inline void updateAttachments(Function function, Args... args)
 	{
 		const std::vector<Attachment*>& attachments = getAllAttachments<Attachment>();
 		std::for_each(attachments.begin(), attachments.end(), [&](Attachment* attachment) {function(attachment, args...); });
 	}
 
-	template <class Attachment>
-	inline void disableAttachment(uint32_t* crateID, std::source_location location=std::source_location::current())
+	export template <class Attachment>
+	inline void disableAttachment(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (!crateExists(crateID))
 			runTimeLogErr("Trying to disable an attachment on an unbound crate", location);
-		
+
 		if (!hasAttachment<Attachment>(crateID))
 			runTimeLogErr("Trying to disable an unbound attachment", location);
 
 		uint32_t attachmentID = getAttachmentID<Attachment>();
 		crateSystem[*crateID][attachmentID]->mDisabled = true;
 	}
-	
-	template <class Attachment>
+
+	export template <class Attachment>
 	inline void enableAttachment(uint32_t* crateID, std::source_location location = std::source_location::current())
 	{
 		if (!crateExists(crateID))
@@ -195,7 +193,7 @@ namespace crate
 		crateSystem[*crateID][attachmentID]->mDisabled = false;
 	}
 
-	inline void clearEverything()
+	export inline void clearEverything()
 	{
 		for (auto crate : crateSystem)
 		{
