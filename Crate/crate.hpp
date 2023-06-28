@@ -34,14 +34,13 @@ namespace crate
 		bool mDisabled = false;
 	};
 
-	static constexpr uint32_t CRATE_MAX_COUNT = 5000;
-	static constexpr uint32_t ATTACHMENT_MAX_COUNT = 50;
-	static std::deque<uint32_t> unusedIndexes;
-	static uint32_t nextID = 0;
+	inline constexpr uint32_t CRATE_MAX_COUNT = 5000;
+	inline std::deque<uint32_t> unusedIndexes;
+	inline uint32_t nextID = 0;
 
 
 
-	static std::unordered_map<uint32_t, std::unordered_map<uint32_t, IAttachment*>> crateSystem;
+	inline std::unordered_map<uint32_t, std::unordered_map<uint32_t, IAttachment*>> crateSystem;
 
 
 	inline [[nodiscard]] bool crateExists(uint32_t* crateID)
