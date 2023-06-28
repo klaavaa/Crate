@@ -20,9 +20,9 @@ namespace crate
 	export inline uint32_t CRATE_MAX_COUNT = 5000;
 	export inline std::deque<uint32_t> unusedIndexes;
 	export inline uint32_t nextID = 0;
+	
 
-
-	void runTimeLogErr(const std::string_view message,
+	inline void runTimeLogErr(const std::string_view message,
 		const std::source_location location = std::source_location::current())
 	{	
 		if(!CRATE_DISABLE_LOGGING)
