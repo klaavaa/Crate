@@ -1,5 +1,5 @@
 
-# Crate
+# Crate (c++20)
 
 Entity Component System
 
@@ -9,9 +9,8 @@ and everything lives in the crate:: namespace.
 Example:
 ```c++
 
-// #define CRATE_DISABLE_LOGGING if you want to disable error messages
-// #define CRATE_MAX_COUNT to change maximum crate count (default is 5000)
-#include "crate.hpp"
+// You can include crate.hpp traditionally or you can use the module crate.ixx
+import crate;
 
 struct PositionAttachment : public crate::IAttachment
 {
