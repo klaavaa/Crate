@@ -194,10 +194,10 @@ namespace crate
 
 	inline void clearEverything()
 	{
-		for (auto crate : crateSystem)
+		for (const auto& crate : crateSystem)
 		{
 			uint32_t crateID = crate.first;
-			for (auto [attachmentID, attachment] : crateSystem[crateID])
+			for (const auto& [attachmentID, attachment] : crateSystem[crateID])
 			{
 				delete attachment;
 			}
