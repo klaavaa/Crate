@@ -8,7 +8,7 @@ and everything lives in the crate:: namespace.
 
 Example:
 ```cpp
-
+#include <iostream>
 // You can include crate.hpp traditionally or you can use the module crate.ixx
 import crate;
 
