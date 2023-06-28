@@ -9,11 +9,13 @@
 #include <string_view>
 #include <algorithm>
 
+
 namespace crate
 {
 
-
-	inline constexpr uint32_t CRATE_MAX_COUNT = 5000;
+#ifndef CRATE_MAX_COUNT
+#define CRATE_MAX_COUNT 5000u
+#endif
 	inline std::deque<uint32_t> unusedIndexes;
 	inline uint32_t nextID = 0;
 
