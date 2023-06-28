@@ -3,7 +3,7 @@
 
 Entity Component System
 
-Entities are called "Crates" and components "Attachments". The entire system is in a header called crate.hpp  
+Entities are called ***Crates*** and components ***Attachments***. The entire system is in a header called crate.hpp  
 and everything lives in the crate:: namespace.
 
 Example:
