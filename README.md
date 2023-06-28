@@ -7,7 +7,7 @@ Entities are called ***Crates*** and components ***Attachments***. The entire sy
 and everything lives in the crate:: namespace.
 
 Example:
-```c++
+```cpp
 
 // You can include crate.hpp traditionally or you can use the module crate.ixx
 import crate;
