@@ -44,9 +44,9 @@ int main()
     crate::disableAttachment<PositionAttachment>(&crateID); // you can disable attachments
     crate::enableAttachment<PositionAttachment>(&crateID); // and enable them
 
-    crate::unbindAttachment<PositionAttachment>(&crateID);
 
     // and you can unbind crates and attachments if you don't have use for them
+    crate::unbindAttachment<PositionAttachment>(&crateID);
     crate::unbind(&crateID);
   
 }
