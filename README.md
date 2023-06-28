@@ -32,19 +32,22 @@ int main()
     uint32_t crateID;
     crate::bind(&crateID); // creates an ID
 
-    crate::bindAttachment<PositionAttachment>(&crateID, 20, 15); // constructs a PositionAttachment bound to crateID
+    // constructs a PositionAttachment bound to crateID
+    crate::bindAttachment<PositionAttachment>(&crateID, 20, 15);
 
     auto attachment = crate::getAttachment<PositionAttachment>(&crateID);
     attachment->x = 35;
 
-    crate::updateAttachments<PositionAttachment>(&moveObjects, 10);  // executes function with every enabled PositionAttachment
+    // executes function with every enabled PositionAttachment
+    crate::updateAttachments<PositionAttachment>(&moveObjects, 10);
 
     crate::disableAttachment<PositionAttachment>(&crateID); // you can disable attachments
     crate::enableAttachment<PositionAttachment>(&crateID); // and enable them
 
     crate::unbindAttachment<PositionAttachment>(&crateID);
-    crate::unbind(&crateID); // and you can unbind crates and attachments if you don't have use for them
-  
 
+    // and you can unbind crates and attachments if you don't have use for them
+    crate::unbind(&crateID);
+  
 }
 ```
