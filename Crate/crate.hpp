@@ -146,7 +146,7 @@ namespace crate
 	{
 		std::vector<Attachment*> attachments;
 		uint32_t attachmentID = getAttachmentID<Attachment>();
-		for (auto crate : crateSystem)
+		for (auto& crate : crateSystem)
 		{
 			uint32_t crateID = crate.first;
 			if (hasAttachment<Attachment>(&crateID))

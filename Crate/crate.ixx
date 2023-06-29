@@ -15,7 +15,7 @@ export module crate;
 
 namespace crate
 {
-	export bool CRATE_DISABLE_LOGGING = false;
+	export inline bool CRATE_DISABLE_LOGGING = false;
 	export inline uint32_t CRATE_MAX_COUNT = 5000;
 	export inline std::deque<uint32_t> unusedIndexes;
 	export inline uint32_t nextID = 0;
@@ -147,7 +147,7 @@ namespace crate
 	{
 		std::vector<Attachment*> attachments;
 		uint32_t attachmentID = getAttachmentID<Attachment>();
-		for (auto crate : crateSystem)
+		for (auto& crate : crateSystem)
 		{
 			uint32_t crateID = crate.first;
 			if (hasAttachment<Attachment>(&crateID))
