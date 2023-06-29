@@ -1,20 +1,17 @@
-module;
-
-#include <iostream>
-
-#include <deque>
-#include <unordered_map>
-#include <vector>
-
-#include <source_location>
-#include <string_view>
-#include <algorithm>
-
-
 export module crate;
+
+import <iostream>;
+import <string_view>;
+import <deque>;
+import <vector>;
+import <source_location>;
+import <algorithm>;
+import <unordered_map>;
+
 
 namespace crate
 {
+
 	export inline bool CRATE_DISABLE_LOGGING = false;
 	export inline uint32_t CRATE_MAX_COUNT = 5000;
 	export inline std::deque<uint32_t> unusedIndexes;
@@ -100,7 +97,9 @@ namespace crate
 	inline [[nodiscard]] bool hasAttachment(uint32_t* crateID)
 	{
 		uint32_t attachmentID = getAttachmentID<Attachment>();
-		return crateSystem[*crateID].find(attachmentID) != crateSystem[*crateID].end();
+		//return crateSystem[*crateID].find(attachmentID) != crateSystem[*crateID].end();
+		//return crateSystem[*crateID].count(attachmentID);
+		return crateSystem[*crateID].contains(attachmentID);
 	}
 
 	export template <class Attachment, typename... Args>
@@ -164,6 +163,7 @@ namespace crate
 	{
 		const std::vector<Attachment*>& attachments = getAllAttachments<Attachment>();
 		std::for_each(attachments.begin(), attachments.end(), [&](Attachment* attachment) {function(attachment, args...); });
+
 	}
 
 	export template <class Attachment>
