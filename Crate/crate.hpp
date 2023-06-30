@@ -99,7 +99,7 @@ namespace crate
 	inline [[nodiscard]] bool hasAttachment(uint32_t* crateID)
 	{
 		uint32_t attachmentID = getAttachmentID<Attachment>();
-		return crateSystem[*crateID].find(attachmentID) != crateSystem[*crateID].end();
+		return crateSystem[*crateID].contains(attachmentID);
 	}
 
 	template <class Attachment, typename... Args>
